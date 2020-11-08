@@ -1,0 +1,7 @@
+/* 引入全局公共样式 (字体图标css)*/
+@import "/static/iconfont/iconfont.wxss";
+
+/* 默认标签（最外层） */
+page {
+  height: 100%;
+}

@@ -1,0 +1,19 @@
+<view class="indexContainer">
+  <!-- <image class="avatarUrl" src="/static/images/nvsheng.jpg"></image> -->
+  <image wx:if="{{userInfo.avatarUrl}}" class="avatarUrl" src="{{userInfo.avatarUrl}}"></image>
+  <button wx:else bindgetuserinfo="handleGetinfo" open-type="getUserInfo">获取用户信息</button>
+  <text  wx:if="{{userInfo.nickName}}" class="userName">{{userInfo.nickName}}</text>
+  <!-- 冒泡 -->
+  <!-- <view class="goStudy" bindtap="handleParent">
+    <text bindtap="handleChild">hello world</text>
+  </view> -->
+  <!-- 非冒泡 -->
+  <!-- <view class="goStudy" catchtap="handleParent">
+    <text catchtap="handleChild">hello world</text>
+  </view> -->
+
+
+  <view class="goStudy" catchtap="toLogs">
+    <text>hello world</text>
+  </view>
+</view>
