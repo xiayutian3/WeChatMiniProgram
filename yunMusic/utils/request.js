@@ -4,8 +4,8 @@ export default (url, data = {}, method = "GET") => {
   return new Promise((resolve, reject) => {
     //1.new promise 初始化promise实例的状态pedding
     wx.request({
-      // url: config.host + url, //模拟器上的地址
-      url: config.mobileHost + url,  //手机模拟地址
+      url: config.host + url, //模拟器上的地址
+      // url: config.mobileHost + url,  //手机模拟地址
       data,
       method,
       success: (res) => {

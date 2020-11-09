@@ -4,13 +4,31 @@ let moveDistance = 0; //手指移动的距离
 Page({
   data: {
     coverTransform: 'translateY(0rpx)',
-    coverTransition:''   //过度的效果
+    coverTransition: '',  //过度的效果
+    userInfo: {}  //用户信息
   },
+  onLoad() {
+  this.getUserInfo()
+  },
+  getUserInfo(){
+    let userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
+      this.setData({ userInfo:JSON.parse(userInfo) })
+    }
+  },
+
+  // 去登陆 页
+  toLogin() {
+    wx.navigateTo({
+      url: "/pages/login/login"
+    })
+  },
+
   handletouchstart(event) {
     // 去掉过渡效果
-     this.setData({
-      coverTransition:''
-     })
+    this.setData({
+      coverTransition: ''
+    })
     startY = event.touches[0].clientY
   },
   handletouchmove(event) {
@@ -32,7 +50,7 @@ Page({
     //结束后重置为初始位置，添加过渡效果
     this.setData({
       coverTransform: 'translateY(0rpx)',
-      coverTransition:`transform 0.3s linear`
+      coverTransition: `transform 0.3s linear`
     })
   }
 })
