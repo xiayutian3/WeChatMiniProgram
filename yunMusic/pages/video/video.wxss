@@ -1,0 +1,36 @@
+/* <!-- 头部区域 --> */
+.videoContainer .header{
+  display: flex;
+  padding: 10rpx;
+}
+.videoContainer .header image{
+  width: 60rpx;
+  height: 60rpx;
+}
+.videoContainer .header .search{
+  flex: 1;
+  margin: 0 20rpx;
+  font-size: 26rpx;
+  text-align: center;
+  line-height: 60rpx;
+  border: 1rpx solid #eee;
+  color: #d43c33;
+}
+
+/* <!-- 导航区域 --> */
+.navScroll{
+  display: flex;
+  white-space: nowrap;
+} 
+.navScroll .navItem{
+  padding: 0 30rpx;
+  font-size: 28rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+}
+.navItem .active{
+  border-bottom: 1rpx solid #d43c33;
+}
+.navScroll .navContent{
+
+}

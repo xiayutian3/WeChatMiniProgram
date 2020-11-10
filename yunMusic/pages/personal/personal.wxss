@@ -211,3 +211,19 @@
 .cardList .card-item .more {
   float: right;
 }
+
+
+
+/* 最近播放的样式 */
+.recentScroll{
+  display: flex;   
+  height: 200rpx; 
+}
+.recentItem{
+  margin-right: 20rpx;
+}
+.recentItem image{
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 10rpx;
+}

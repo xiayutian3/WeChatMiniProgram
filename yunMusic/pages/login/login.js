@@ -57,9 +57,13 @@ Page({
       //将用户信息存储到本地（同步版本）
       wx.setStorageSync('userInfo',JSON.stringify(res.profile))
       //跳转个人中心
+
+      // 跳转到 tabBar 页面，并关闭其他所有非 tabBar 页面
       // wx.switchTab({
       //   url:"/pages/personal/personal"
       // })
+
+      // 关闭所有页面，打开到应用内的某个页面
       wx.reLaunch({
         url:"/pages/personal/personal"
       })
