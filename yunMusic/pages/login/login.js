@@ -47,7 +47,7 @@ Page({
       return
     } 
     //发请求(get请求)
-    const res = await request('/login/cellphone',{phone,password})
+    const res = await request('/login/cellphone',{phone,password,isLogin:true})
     console.log("login -> res", res)
     if(res.code ===200){
       wx.showToast({
