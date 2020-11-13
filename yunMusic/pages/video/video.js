@@ -6,6 +6,7 @@ Page({
     videoList:[], //视频列表数据
     videoId:'', // 视频id标识
     videoUpdateTime:[], //记录m每一个video播放的时长
+    isTriggered:false  //下拉刷新的标识
   },
   onLoad() {
     //获取导航数据
@@ -35,6 +36,10 @@ Page({
 
     //关闭loading提示框
     wx.hideLoading()
+    //关闭下拉刷新
+    this.setData({
+      isTriggered:false
+    })
   }, 
   // 选中导航的回调
   changeNav(event) {
@@ -131,5 +136,41 @@ Page({
     this.setData({
       videoUpdateTime
     })
+  },
+  //下拉刷新(scroll-view)
+  handleRefresh(){
+    console.log('下拉刷新')
+    // 获取视频列表数据
+    this.getVideoList(this.data.navId)
+  },
+  //上拉加载更多(scroll-view)
+  handleToLower(){
+    console.log('加载更多')
+    //加载更过数据-数据分页
+    let videoList = this.data.videoList
+    videoList.push(...videoList)
+    this.setData({
+      videoList
+    })
+  },
+
+  onPullDownRefresh: function() {  //会自动复原
+    // 触发下拉刷新时执行
+    console.log('页面下拉刷新')
+  },
+  onReachBottom: function() {
+    // 页面触底时执行
+    console.log('页面上拉')
+  },
+  onShareAppMessage: function ({from}) {
+  console.log("from", from)
+    // 页面被用户分享时执行
+
+    //自定义转发内容
+    return{
+      title:'自定义转发内容',
+      page:'/pages/video/video',
+      imageUrl:'/static/images/nvsheng.jpg'
+    }
   }
 })
