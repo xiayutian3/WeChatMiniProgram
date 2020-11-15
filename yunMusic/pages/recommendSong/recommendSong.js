@@ -49,6 +49,18 @@ Page({
     })
   },
 
+  //跳转歌曲详情
+  toSongDetail(event){
+    //获取传递的参数
+    let song = event.currentTarget.dataset.song
+    //路由跳转传参：query参数
+    wx.navigateTo({
+      // 不能直接将song对象作为参数传递，长度过长，会被自动截取掉
+      // url:'/pages/songDetail/songDetail?song='+ JSON.stringify(song)
+      url:'/pages/songDetail/songDetail?musicId='+ song.id
+    })
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

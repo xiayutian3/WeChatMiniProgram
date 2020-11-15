@@ -1,4 +1,7 @@
 // pages/songDetail/songDetail.js
+import request from '../../utils/request'
+//获取全局实例
+const appInstance = getApp()
 Page({
 
   /**
@@ -6,22 +9,128 @@ Page({
    */
   data: {
     isPlay:false,  //音乐的播放状态
-
+    song:{},  //歌曲详情对象
+    musicId:'' //音乐的id
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    //options 用于接收路由跳转的query参数
+    //原生小程序中路由传参，对参数的长度限制，如果参数的长度过长会自动截取掉
+  // console.log("options", JSON.parse(options.song))
 
+    let musicId = options.musicId;
+    // console.log("musicId", musicId)
+    this.setData({
+      musicId
+    })
+    //获取音乐详情
+    this.getMusicInfo(musicId)
+
+    /**
+     * 问题：如果用户操作系统的控制音乐播放/暂停的按钮，页面不知道，导致页面的显示与真实音乐的播放状态不一致
+     * 解决方案
+     * 1.通过控制音频的实例 backgroundAudioManager 去监听音乐的播放暂停
+     */
+
+
+     //判断当前页面的音乐是否在播放
+     if(appInstance.globalData.isMusicPlay && appInstance.globalData.musicId === musicId){
+       //修改当前页面音乐播放状态为true
+       this.setData({
+        isPlay:true
+      })
+     }
+
+
+      //创建音乐的播放状态实例
+      this.backgroundAudioManager = wx.getBackgroundAudioManager()
+      //监听播放/暂停/停止
+      this.backgroundAudioManager.onPlay(()=>{
+        // console.log('监听播放')
+        // //修改播放状态
+        // this.setData({
+        //   isPlay:true
+        // })
+        this.changePlayState(true)
+        
+        //修改全局音乐播放的状态
+        appInstance.globalData.isMusicPlay = true
+        appInstance.globalData.musicId = musicId
+
+      })
+      this.backgroundAudioManager.onPause(()=>{
+        // console.log('监听暂停')
+          //修改播放状态
+          // this.setData({
+          //   isPlay:false
+          // })
+          this.changePlayState(false)
+           //修改全局音乐播放的状态
+        appInstance.globalData.isMusicPlay = true
+      })
+      this.backgroundAudioManager.onStop(()=>{
+        // console.log('监听停止')
+           //修改播放状态
+          //  this.setData({
+          //   isPlay:false
+          // })
+          this.changePlayState(false)
+           //修改全局音乐播放的状态
+        appInstance.globalData.isMusicPlay = true
+      })
   },
-  //用户点击 音乐播放的控制
-  musicPlay(){
-    let isPlay = !this.data.isPlay
+  //修改播放状态
+  changePlayState(isPlay){
     this.setData({
       isPlay
     })
   },
+
+  //获取音乐详情的功能函数
+  async getMusicInfo(musicId){
+    let songData = await request('/song/detail',{ids:musicId})
+    this.setData({
+      song:songData.songs[0]
+    })
+
+    //动态设置窗口标题
+    wx.setNavigationBarTitle({
+      title:this.data.song.name
+    })
+  },
+  //用户点击 音乐播放的控制
+  musicPlay(){
+    let isPlay = !this.data.isPlay
+
+    // 修改播放状态
+    // this.setData({
+    //   isPlay
+    // })
+
+    //控制音乐播放/暂停
+    this.musicControl(isPlay,this.data.musicId)
+  },
+
+
+  //控制音乐播放/暂停的功能函数
+  async musicControl(isPlay,musicId){
+     
+    if(isPlay){ //音乐播放
+      //获取音乐的播放链接
+      let musicLinkData = await request('/song/url',{id:musicId})
+      let musicLink = musicLinkData.data[0].url
+     
+      //播放音乐
+      this.backgroundAudioManager.src = musicLink //设置src会自动播放
+      this.backgroundAudioManager.title = this.data.song.name  //必填项，不填，音乐无法播放
+    }else{ //音乐暂停
+      this.backgroundAudioManager.pause()
+    }
+  },
+
 
   /**
    * 生命周期函数--监听页面初次渲染完成
