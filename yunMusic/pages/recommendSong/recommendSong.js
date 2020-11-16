@@ -1,4 +1,6 @@
 // pages/recommendSong/recommendSong.js
+// 消息的发布订阅
+import PubSub from 'pubsub-js'
 //封装后的请求
 import request from '../../utils/request'
 
@@ -10,7 +12,8 @@ Page({
   data: {
     day:'',//天
     month:'', //月
-    recommendList:[] //每日推荐的歌曲数据
+    recommendList:[], //每日推荐的歌曲数据
+    index:0 //点击音乐的下标
   },
 
   /**
@@ -39,6 +42,31 @@ Page({
 
     //获取每日推荐的数据
     this.getrecommendList()
+
+    // 订阅来自songDetai页面发布的消息（页面间的通信）
+    PubSub.subscribe('switchType', (msg,type)=>{
+    // console.log("msg,type", msg,type)
+    let {recommendList,index} = this.data
+    if(type === 'pre'){
+      // 临界值，第一首，在点击上一首，就变到最后一首
+      (index === 0) && (index = recommendList.length)
+      index-=1
+    }else{
+       // 临界值，最后一首，在点击下一首，就变到第一首
+      (index ===  recommendList.length -1 ) && (index = -1)
+      index+=1
+    }
+
+    //更新下标
+    this.setData({
+      index
+    })
+
+    //下一首或上一首的id
+    let musicId = recommendList[index].id
+    //将musicId回传给songDetai页面
+    PubSub.publish('musicId',musicId)
+    });
   },
   
   // 获取每日推荐的数据
@@ -52,7 +80,11 @@ Page({
   //跳转歌曲详情
   toSongDetail(event){
     //获取传递的参数
-    let song = event.currentTarget.dataset.song
+    let {song,index} = event.currentTarget.dataset
+    //更新点击音乐的下标
+    this.setData({
+      index
+    })
     //路由跳转传参：query参数
     wx.navigateTo({
       // 不能直接将song对象作为参数传递，长度过长，会被自动截取掉

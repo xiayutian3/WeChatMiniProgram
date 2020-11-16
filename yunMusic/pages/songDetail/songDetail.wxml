@@ -11,11 +11,11 @@
   <view class="musicControl">
     <text class="iconfont icon-iconsMusicyemianbofangmoshiShuffle"></text>
 
-    <text class="iconfont icon-shangyishou"></text>
+    <text class="iconfont icon-shangyishou" id="pre" bind:tap="handleSwitch"></text>
 
     <text class="iconfont {{isPlay?'icon-zanting':'icon-bofang'}} big" bind:tap="musicPlay"></text>
 
-    <text class="iconfont icon-next"></text>
+    <text class="iconfont icon-next" id="next" bind:tap="handleSwitch"></text>
 
     <text class="iconfont icon-iconsMusicyemianbofangmoshiPlayList"></text>
   </view>
