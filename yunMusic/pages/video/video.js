@@ -154,6 +154,13 @@ Page({
     })
   },
 
+  //跳转至搜索音乐
+  toSearch(){
+    wx.navigateTo({
+      url:'/pages/search/search'
+    })
+  },
+
   onPullDownRefresh: function() {  //会自动复原
     // 触发下拉刷新时执行
     console.log('页面下拉刷新')

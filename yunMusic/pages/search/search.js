@@ -11,7 +11,8 @@ Page({
     placeholderContent:'', //placeholder的内容
     hotList:[], //热搜榜数据
     searchContent:'', //用户输入的表单项数据
-    searchList:[] //关键字模糊匹配的数据
+    searchList:[], //关键字模糊匹配的数据
+    historyList:[] //搜索历史记录
   },
 
   /**
@@ -20,7 +21,8 @@ Page({
   onLoad: function (options) {
       //获取初始化数据
       this.getInitData()
-
+      // 获取本地历史记录的功能函数
+      this.getSearchHistory()
   },
 
   //获取初始化数据
@@ -31,6 +33,16 @@ Page({
       placeholderContent:res.data.showKeyword,
       hotList:hotListData.data
     })
+  },
+
+  // 获取本地历史记录的功能函数
+  getSearchHistory(){
+    let historyList = wx.getStorageSync('searchHistory')
+    if(historyList){
+      this.setData({
+        historyList
+      })
+    }
   },
 
   //处理input实时搜索
@@ -48,15 +60,68 @@ Page({
     isSend = true
 
     setTimeout(async()=>{
+      //如果没有关键字，就不发请求,搜索结果置为空
+      if(!this.data.searchContent){
+        this.setData({
+          searchList:[]
+        })
+        return
+      }
        //发请求获取关键字模糊匹配的数据
     let res = await request('/search',{keywords:this.data.searchContent,limit:10})
     this.setData({
       searchList:res.result.songs
     })
     isSend = false
+
+    // 将搜索关键字放到历史记录中
+    let {historyList,searchContent} = this.data
+    //如果之前存在历史记录，就删除掉
+    if(historyList.indexOf(searchContent) !== -1){
+      historyList.splice(historyList.indexOf(searchContent),1)
+    }
+    //在前面添加历史记录
+    historyList.unshift(searchContent)
+    this.setData({
+      historyList
+    })
+    //将历史记录存本地，防止用户刷新界面
+    wx.setStorageSync('searchHistory',historyList)
+
     },300)
    
   },
+
+  //清空输入内容
+  clearSearchContent(){
+    this.setData({
+      searchContent:'',
+      searchList:[]
+    })
+  },
+
+
+  //删除历史记录
+  deleteSearchHistory(){
+
+    wx.showModal({
+      content: '确认删除吗',
+      success :(res) =>{
+        if (res.confirm) {
+          // console.log('用户点击确定')
+          //清除data中
+          this.setData({
+            historyList:[]
+          })
+          //清除本地存储的 
+          wx.removeStorageSync('searchHistory')
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
 
   /**
    * 生命周期函数--监听页面初次渲染完成
