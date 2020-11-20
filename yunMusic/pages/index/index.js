@@ -22,6 +22,13 @@ Page({
     })
   },
 
+  //跳转自定义template页
+  toTemplate(){
+    wx.navigateTo({
+      url:'/pages/useTemplate/useTemplate'
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */

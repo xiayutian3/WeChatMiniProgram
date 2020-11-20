@@ -6,9 +6,14 @@ const request = require('./util/request')
 const packageJSON = require('./package.json')
 const exec = require('child_process').exec
 const cache = require('apicache').middleware
-const Fly=require("flyio/src/node");
-const jwt = require('jsonwebtoken');
+// const Fly=require("flyio/src/node");
+// const jwt = require('jsonwebtoken');
+// const fly=new Fly;
+// Node 入口
+const Fly=require("flyio/src/node")
 const fly=new Fly;
+const jwt = require('jsonwebtoken');
+
 
 
 const app = express()
@@ -48,30 +53,66 @@ app.use(cache('2 minutes', ((req, res) => res.statusCode === 200)))
 app.use(express.static(path.join(__dirname, 'public')))
 
 
-// 注册获取用户唯一标识的接口
-app.use('/getOpenId', async (req, res, next) => {
-  let code = req.query.code;
-  let appId = 'wx810e8b1fde386fde';
-  let appSecret = '8bb909649da12002fba7a47f5ac3791b';
+// 注册获取用户唯一标识的接口 （老师的 ）
+// app.use('/getOpenId', async (req, res, next) => {
+//   let code = req.query.code;
+//   let appId = 'wx810e8b1fde386fde';
+//   let appSecret = '8bb909649da12002fba7a47f5ac3791b';
+//   let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${appId}&secret=${appSecret}&js_code=${code}&grant_type=authorization_code`
+//   // 发请求给微信服务器获取openId
+//   let result = await fly.get(url);
+//   let openId = JSON.parse(result.data).openid;
+//    console.log('openId', openId);
+//    // 自定义登录态
+//    let person = {
+//      username: '北方汉子',
+//      age: 18,
+//      openId
+//    }
+//    // 对用户的数据进行加密，生成token返回给客户端
+//   let token = jwt.sign(person, 'atguigu');
+//   console.log(token);
+//   // 验证身份，反编译token
+//   let result2 = jwt.verify(token, 'atguigu');
+//   console.log(result2);
+//   res.send(token);
+// });
+
+
+
+// 自己写的，微信小程序注册获取用户唯一标识的接口openId
+app.use('/getOpenId',async (req,res,next)=>{
+  let code = req.query.code
+  // console.log('code:',code)
+  let appId = 'wx6797f923731c97a8'
+  let appSecret = '512e99d4cf281319a62b6cb7483cb2fe'
+
+  //请求微信服务器，获取用户openId
   let url = `https://api.weixin.qq.com/sns/jscode2session?appid=${appId}&secret=${appSecret}&js_code=${code}&grant_type=authorization_code`
-  // 发请求给微信服务器获取openId
-  let result = await fly.get(url);
-  let openId = JSON.parse(result.data).openid;
-   console.log('openId', openId);
-   // 自定义登录态
-   let person = {
-     username: '北方汉子',
-     age: 18,
-     openId
-   }
-   // 对用户的数据进行加密，生成token返回给客户端
-  let token = jwt.sign(person, 'atguigu');
-  console.log(token);
-  // 验证身份，反编译token
-  let result2 = jwt.verify(token, 'atguigu');
-  console.log(result2);
-  res.send(token);
-});
+  let response = await fly.get(url)
+  // console.log(response);
+  // 转化一下数据
+  let openId = JSON.parse(response.data).openid;
+  // console.log('openId',openId)
+
+  //自定义登录态
+  let person = {
+    username:'下雨天',
+    age:18,
+    openId
+  }
+  //对用户的数据进行加密，生成token返回给客户端
+  let token = jwt.sign(person,'xiayutian')
+
+  //验证身份，反编译token
+  let result2 = jwt.verify(token,'xiayutian')
+  console.log("result2", result2)
+  
+  res.send(token)
+})
+
+
+
 
 
 

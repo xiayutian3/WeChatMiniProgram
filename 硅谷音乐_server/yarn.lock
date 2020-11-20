@@ -2724,7 +2724,7 @@ node-environment-flags@1.0.5:
 
 nodemon@^2.0.6:
   version "2.0.6"
-  resolved "https://registry.npm.taobao.org/nodemon/download/nodemon-2.0.6.tgz#1abe1937b463aaf62f0d52e2b7eaadf28cc2240d"
+  resolved "https://registry.npm.taobao.org/nodemon/download/nodemon-2.0.6.tgz?cache=0&sync_timestamp=1603131097031&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fnodemon%2Fdownload%2Fnodemon-2.0.6.tgz#1abe1937b463aaf62f0d52e2b7eaadf28cc2240d"
   integrity sha1-Gr4ZN7RjqvYvDVLit+qt8ozCJA0=
   dependencies:
     chokidar "^3.2.2"
