@@ -1,0 +1,10 @@
+/* pages/useTemplate/useTemplate.wxss */
+/* 引入自定义模板后，也要引入自定义模板的样式 */
+
+@import "/template/myTemplate/myTemplate.wxss";
+
+.bigtitle{
+  font-size: 60rpx;
+  font-weight: bold;
+  color: lightgreen;
+}

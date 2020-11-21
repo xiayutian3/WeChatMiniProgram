@@ -1,0 +1,12 @@
+<!-- 引入自定义模板内容 -->
+<import src="/template/myTemplate/myTemplate.wxml"/>
+
+<view class="otherContainer">
+  <!-- 测试模板   使用模板-->
+  <view class="bigtitle">测试使用模板</view>
+  <template is="myTmp" data="{{...userInfo}}"/>
+
+  <!-- 测试获取用户唯一标识openid -->
+  <view class="bigtitle">测试获取用户唯一标识openid</view>
+  <button bind:tap="handleGetOpenId">获取用户openid</button>
+</view>
